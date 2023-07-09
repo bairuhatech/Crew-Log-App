@@ -44,7 +44,7 @@ export default function LoginScreen() {
           let url = API.LOGIN;
           var CheckAPI: any = await POST(url, user);
           if (CheckAPI.emp_id) {
-            dispatch(login(user));
+            dispatch(login(CheckAPI));
             if (CheckAPI.designation === 'Admin') {
               dispatch(setAdmin(true));
             }
