@@ -28,8 +28,9 @@ const Location = () => {
 
   const getLocations = async () => {
     setIsLoading(true);
-    let api = API.BASE_URL + API.GET_LOCATIONS;
-    let location: any = await PUT(api, null);
+    let api = API.GET_LOCATIONS;
+    let location: any = await GET(api, null);
+    console.log(location);
     setLocations(location);
     setIsLoading(false);
   };

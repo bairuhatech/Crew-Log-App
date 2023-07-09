@@ -1,18 +1,8 @@
-import {
-  FlatList,
-  RefreshControl,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-  Alert,
-} from 'react-native';
+import {FlatList, RefreshControl, StyleSheet, View, Alert} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import PageLoader from '../../Components/PageLoader';
 import API from '../../Config/API';
 import UserItem from '../../Components/UserItem';
-import COLOR from '../../Config/COLOR';
-import FONT from '../../Config/Fonts';
 import {useNavigation} from '@react-navigation/core';
 import {GET} from '../../Utils/ApiCall';
 
@@ -81,26 +71,6 @@ const AllUsers = () => {
           />
         </View>
       )}
-      <View style={{padding: 10}}>
-        <TouchableOpacity
-          onPress={() => navigation.navigate('Admin' as never)}
-          style={{
-            backgroundColor: COLOR.primary,
-            height: 45,
-            borderRadius: 7,
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}>
-          <Text
-            style={{
-              color: '#fff',
-              fontFamily: FONT.semibold,
-              fontSize: 14,
-            }}>
-            Back
-          </Text>
-        </TouchableOpacity>
-      </View>
     </View>
   );
 };
