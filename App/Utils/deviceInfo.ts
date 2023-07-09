@@ -38,4 +38,24 @@ const getDeviceInfo = async () => {
   });
 };
 
-export {getDeviceInfo};
+const getTimeInfo = async () => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const currentTime = new Date().getHours();
+      var newGreeting = '';
+      if (currentTime >= 5 && currentTime < 12) {
+        newGreeting = 'Good Morning';
+      } else if (currentTime >= 12 && currentTime < 17) {
+        newGreeting = 'Good Afternoon';
+      } else {
+        newGreeting = 'Good Evening';
+      }
+      resolve(newGreeting);
+    } catch (error) {
+      console.log(error);
+      reject({});
+    }
+  });
+};
+
+export {getDeviceInfo, getTimeInfo};

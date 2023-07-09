@@ -9,7 +9,7 @@ import {
   RequestPermission,
   calculateDistance,
 } from '../../Utils/LocationPermission';
-import {getDeviceInfo} from '../../Utils/deviceInfo';
+import {getDeviceInfo, getTimeInfo} from '../../Utils/deviceInfo';
 import {CheckiN, checkOUT} from '../../Redux/Slices/CheckInOut';
 import API from '../../Config/API';
 import {POST, GET} from '../../Utils/ApiCall';
@@ -21,13 +21,20 @@ export default function HomeScreen() {
   const CheckInOut = useSelector((state: any) => state.CheckInOut);
   const [status, setStatus] = useState(CheckInOut.status);
   const [processo, setProcesso] = useState(false);
+  const [dateTime, setTateTime] = useState('');
   const [isNear, setIsNear] = useState(false);
   let InColor = ['#FF512F', '#DD2476', '#DD2476'];
   let OutConlor = [COLOR.primary, COLOR.primary1, COLOR.primary2];
 
   useEffect(() => {
+    checkTime();
     setStatus(CheckInOut.status);
   }, [CheckInOut]);
+
+  const checkTime = async () => {
+    let datetim: any = await getTimeInfo();
+    setTateTime(datetim);
+  };
 
   const getLocationsList = async () => {
     return new Promise(async (resolve, reject) => {
@@ -190,7 +197,7 @@ export default function HomeScreen() {
     <View style={styles.container}>
       <StatusBar backgroundColor={COLOR.White} barStyle={'dark-content'} />
       <View style={styles.Box1}>
-        <Text style={styles.txt1}>Good Moring</Text>
+        <Text style={styles.txt1}>{dateTime}</Text>
         <Text style={styles.txt2}>{Auth.first_name}</Text>
       </View>
       <View style={styles.Box2}>
