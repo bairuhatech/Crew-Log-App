@@ -6,6 +6,7 @@ import {
   ScrollView,
   Image,
   ImageBackground,
+  Alert,
 } from 'react-native';
 import React, {useState} from 'react';
 import COLOR from '../../config/color';
@@ -19,8 +20,14 @@ import {validateAll} from 'indicative/validator';
 import API from '../../config/API';
 import {useDispatch} from 'react-redux';
 import {login} from '../../redux/Slices/AuthSlice';
+import {useToast} from 'react-native-toast-notifications';
+import axios from 'axios';
+import {empId} from '../../redux/Slices/UserSlice';
+import {logout} from '../../redux/Slices/AuthSlice';
 
 const LoginScreen = () => {
+  const toast = useToast();
+
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const [isLoading, setIsLoading] = useState(false);
@@ -37,7 +44,7 @@ const LoginScreen = () => {
 
   const DoLogin = () => {
     console.log('Login----');
-
+    dispatch(logout());
     setError('');
     setFomrError({});
     let obj = {
@@ -51,34 +58,82 @@ const LoginScreen = () => {
         setIsLoading(true);
         let api = API.BASE_URL + API.LOGIN;
         console.log('Login----2', api);
-        fetch(api, {
-          method: 'post',
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(obj),
-        })
-          .then((response: any) => response.json())
-          .then((json: any) => {
-            console.log(json);
-            console.log('Login----2 api');
-            setIsLoading(false);
+        // fetch(api, {
+        //   method: 'post',
+        // headers: {
+        //   Accept: 'application/json',
+        //   'Content-Type': 'application/json',
+        // },
+        //   body: JSON.stringify(obj),
+        // })
+        //   .then((response: any) => response.json())
+        //   .then((json: any) => {
+        //     console.log(json);
+        //     console.log('Login----2 api');
+        //     setIsLoading(false);
 
-            if (json.uuid) {
-              dispatch(login(json));
-              // props.navigation.reset({routes: [{name: 'Homescreen'}]});
+        //     if (json.uuid) {
+        //       dispatch(login(json));
+        //       // props.navigation.reset({routes: [{name: 'Homescreen'}]});
+        //       navigation.navigate('homeScreen' as never);
+        //     } else {
+        //       setError('Invalid Employee ID or Password!');
+        // toast.show('Invalid Employee ID or Password !', {
+        //   type: 'danger',
+        // });
+        //       setIsLoading(false);
+        //     }
+        //   })
+        //   .catch(error => {
+        //     setError(error.response.data.message);
+        //     toast.show('error.response.data.message !', {
+        //       type: 'danger',
+        //     });
+        //     setIsLoading(false);
+        //     setError('Login faild.Try again!');
+        //   });
+
+        axios
+          .post(api, obj, {
+            // headers: {
+            //   'Content-Type': 'application/x-www-form-urlencoded',
+            // },
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+            },
+          })
+          .then(function (response) {
+            console.log(response);
+            let user = response.data;
+            if (user) {
+              console.log('User ---> ', user);
+              dispatch(login(user));
+              dispatch(empId(user.emp_id));
+              setIsLoading(false);
               navigation.navigate('homeScreen' as never);
             } else {
-              setError('Invalid Username or Password!');
-              setIsLoading(false);
+              toast.show('Invalid Employee ID or Password !', {
+                type: 'danger',
+              });
             }
-          })
-          .catch(error => {
-            setError(error.response.data.message);
-            setIsLoading(false);
-            setError('Login faild.Try again!');
+            // else if (user.login_status === 1) {
+            //   dispatch(login(user));
+            //   navigation.navigate('homeScreen' as never);
+            // }
           });
+
+        // axios
+        //   .post(api, obj)
+
+        //   .then((response: any) => response)
+        //   .then((json: any) => {
+        //     console.log(json);
+        //   })
+
+        // .catch(function (error) {
+        //   console.log(error);
+        // });
       })
       .catch(errors => {
         const formattedErrors: any = {};
@@ -88,45 +143,6 @@ const LoginScreen = () => {
         );
         setFomrError(formattedErrors);
       });
-  };
-
-  const DoLogin1 = () => {
-    setIsLoading(true);
-    setError('');
-    setFomrError({});
-    const url = API.BASE_URL + API.LOGIN;
-    const data = {
-      emp_id: username,
-      password: password,
-    };
-
-    validateAll(data, rules).then(success => {
-      setIsLoading(true);
-      fetch(url, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      })
-        .then(response => response.json())
-        .then(data => {
-          console.log('Success:', data);
-          setIsLoading(false);
-
-          if (data) {
-            dispatch(login(data));
-            // props.navigation.reset({routes: [{name: 'Homescreen'}]});
-            navigation.navigate('homeScreen' as never);
-          } else {
-            setError('Invalid Username or Password!');
-            setIsLoading(false);
-          }
-        })
-        .catch(error => {
-          console.error('Error:', error);
-        });
-    });
   };
 
   return (
@@ -166,12 +182,21 @@ const LoginScreen = () => {
             onChange={(text: any) => setUsername(text)}
           />
 
-          <Textinput
+          {/* <Textinput
             error={fomrError['password'] ? true : false}
             head="Password"
             keyboard="ascii-capable"
             onChange={(text: any) => setPassword(text)}
+          /> */}
+
+          <Textinput
+            error={fomrError['password'] ? true : false}
+            head="Password"
+            keyboard="ascii-capable"
+            password
+            onChange={(text: any) => setPassword(text)}
           />
+
           <TouchableOpacity onPress={() => DoLogin()} style={styles.LoginBtn}>
             {isLoading ? (
               <Loader color={COLOR.grey10} />

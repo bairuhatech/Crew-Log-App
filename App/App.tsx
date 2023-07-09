@@ -5,7 +5,7 @@ import {StatusBar} from 'react-native';
 import Routes from './routes';
 // import {Store, PersistedStore} from './redux/store';
 // import {Store} from './redux/store';
-// import {Store} from './redux/Store';
+// import {Store} from './redux/Store'; 
 import {Store} from './redux/Store';
 import {PersistedStores} from './redux/Store';
 import {Provider} from 'react-redux';

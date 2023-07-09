@@ -3,6 +3,7 @@ import React from 'react';
 import Modal from 'react-native-modal';
 import Loader from '../loader';
 import FONT from '../../config/font';
+import COLOR from '../../config/color';
 
 const LoadingModal = (props: any) => {
   return (
@@ -16,18 +17,21 @@ const LoadingModal = (props: any) => {
             height: 70,
             justifyContent: 'center',
             borderRadius: 7,
-            // marginBottom:10
           }}>
           <View
             style={{
-              //   backgroundColor: 'red',
               alignItems: 'center',
               flexDirection: 'row',
               paddingHorizontal: 30,
             }}>
             <Loader size="large" />
             <Text
-              style={{fontFamily: FONT.semibold, fontSize: 15, marginLeft: 20}}>
+              style={{
+                fontFamily: FONT.semibold,
+                fontSize: 15,
+                marginLeft: 20,
+                color: COLOR.black,
+              }}>
               {props.text}
             </Text>
           </View>

@@ -16,6 +16,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import API from '../../config/API';
 import {useToast} from 'react-native-toast-notifications';
 import {useNavigation} from '@react-navigation/core';
+import NewUserModal from './components/newUserModal';
 
 const AddUser = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -36,6 +37,9 @@ const AddUser = () => {
   const [password, setPassword] = useState('');
   const [isAdmin, setIsAdmin] = useState(false);
 
+  const [newUserData, setNewUserData] = useState({});
+  const [newUser, setNewUser] = useState(false);
+
   const onSubmit = () => {
     setIsLoading(true);
     let api = API.BASE_URL + API.CREATE_USER;
@@ -52,6 +56,7 @@ const AddUser = () => {
       active: active,
       role: isAdmin ? 1 : 0,
       join_date: joinDate,
+      login_status: 1,
     };
 
     console.log('Use reqObj --> ', reqObj);
@@ -67,9 +72,11 @@ const AddUser = () => {
       .then(data => {
         console.log('Success:', data);
         // dispatch(checkin());
-        setIsLoading(true);
+        setNewUserData(data);
+        setNewUser(true);
+        setIsLoading(false);
         // props.close();
-        navigation.navigate('allUsers' as never);
+        // navigation.navigate('allUsers' as never);
         toast.show('Checkin Successful', {
           type: 'success',
         });
@@ -79,28 +86,33 @@ const AddUser = () => {
         toast.show('Some Error Occured', {
           type: 'danger',
         });
-        setIsLoading(true);
+        setIsLoading(false);
       });
   };
 
   return (
     <View style={{flex: 1}}>
       <View style={styles.CreateUserForm}>
-        <ScrollView>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          showsHorizontalScrollIndicator={false}>
           <Textinput
             head="First name"
+            value={firstName}
             onChange={(text: any) => setFirstName(text)}
             error=""
           />
           <Textinput
             head="Last name"
             keyboard=""
+            value={lastName}
             onChange={(text: any) => setLastName(text)}
             error=""
           />
 
           <Textinput
             head="Email"
+            value={email}
             keyboard="email-address"
             onChange={(text: any) => setEmail(text)}
             error=""
@@ -108,6 +120,7 @@ const AddUser = () => {
 
           <Textinput
             head="Phone"
+            value={phone}
             keyboard="number-pad"
             onChange={(text: any) => setPhone(text)}
             error=""
@@ -158,21 +171,21 @@ const AddUser = () => {
           <Textinput
             head="Designation"
             keyboard=""
+            value={designation}
             onChange={(text: any) => setDesignation(text)}
             error=""
           />
 
           <DatePick
             head="Join Date"
-            value={
-              checkoutTime ? moment(checkoutTime).format('MMMM Do YYYY') : ''
-            }
+            value={joinDate ? moment(joinDate).format('MMMM Do YYYY') : ''}
             onChange={(date: any) => setJoinDate(date.toISOString())}
           />
 
           <Textinput
             head="Password"
             keyboard=""
+            password
             onChange={(text: any) => setPassword(text)}
             error=""
           />
@@ -192,6 +205,16 @@ const AddUser = () => {
           )}
         </TouchableOpacity>
       </View>
+
+      <NewUserModal
+        onOkay={() => {
+          setNewUser(false);
+          navigation.navigate('allUsers' as never);
+        }}
+        visible={newUser}
+        close={() => setNewUser(false)}
+        data={newUserData}
+      />
     </View>
   );
 };

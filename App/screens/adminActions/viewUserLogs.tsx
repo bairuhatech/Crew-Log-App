@@ -1,74 +1,37 @@
-import {
-  RefreshControl,
-  ScrollView,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
-import React, {useCallback, useEffect, useState} from 'react';
-import COLOR from '../../config/color';
-import styles from './styles';
-import Feather from 'react-native-vector-icons/Feather';
+import {RefreshControl, ScrollView, StyleSheet, Text, View} from 'react-native';
+import React, {useEffect, useState} from 'react';
 import API from '../../config/API';
 import {useSelector} from 'react-redux';
 import moment from 'moment';
 import PageLoader from '../../components/pageLoader';
-import {useFocusEffect, useNavigation} from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import {useToast} from 'react-native-toast-notifications';
+import COLOR from '../../config/color';
 import FONT from '../../config/font';
+import Feather from 'react-native-vector-icons/Feather';
 
-const ReportScreen = () => {
+const ViewUserLogs = () => {
   const toast = useToast();
   const navigation = useNavigation();
   const [groupedRData, setGroupedRData] = useState<any>({});
-  const Auth = useSelector((state: any) => state.Auth.user);
-  const EmpID = useSelector((state: any) => state.User.emp_id);
-  console.log('----- EmpID -----> ', EmpID);
+  const User = useSelector((state: any) => state.User.emp_id);
+
+  // console.log('Auth--> ', Auth);
   const [reportData, setReportData] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  React.useEffect(() => {
-    navigation.setOptions({
-      headerRight: () => (
-        <View style={styles.HeaderRow}>
-          <TouchableOpacity onPress={() => getAllData()}>
-            <Feather size={20} color={COLOR.grey1} name="refresh-cw" />
-          </TouchableOpacity>
-        </View>
-      ),
-    });
-  }, [navigation]);
-
   useEffect(() => {
     setLoading(true);
     getAllData();
-  }, [navigation]);
-
-  useFocusEffect(
-    useCallback(() => {
-      // const unsubscribe = setRoleID(props.user.SELECTED_ROLE.id);
-      // return () => unsubscribe();
-      console.log('----------------------current----------------------');
-      setLoading(true);
-      getAllData();
-    }, []),
-  );
-
-  // React.useLayoutEffect(() => {
-  //   console.log('-----------current------------'); // <-- this logs an old value because this runs first!
-  // });
-
-  const handleRefresh = () => {
-    setRefreshing(true);
-    getAllData();
-    setRefreshing(false);
-  };
+  }, []);
 
   const getAllData = () => {
     setLoading(true);
-    let api = `${API.BASE_URL}${API.REPORT_BY_USER2}${Auth.emp_id}?order=DESC&page=1&take=200`;
-    console.log(api);
+    let api = `${API.BASE_URL}${API.REPORT_BY_USER2}${Number(
+      User,
+    )}?order=ASC&page=1&take=200`;
+    console.log('------------------------api ---', api);
 
     fetch(api, {
       method: 'get',
@@ -79,15 +42,21 @@ const ReportScreen = () => {
     })
       .then(data => data.json())
       .then(report => {
-        // console.log(report.data);
+        console.log(report.data);
         const REPORT_DATA = report.data;
         setReportData(REPORT_DATA);
         setLoading(false);
-        // console.log(REPORT_DATA);
+        console.log(REPORT_DATA);
       })
       .catch(error => {
         console.log('Service Error ===>>', error);
       });
+  };
+
+  const handleRefresh = () => {
+    setRefreshing(true);
+    getAllData();
+    setRefreshing(false);
   };
 
   return (
@@ -97,8 +66,7 @@ const ReportScreen = () => {
           <PageLoader />
         </View>
       ) : (
-        <View style={{flex: 1, paddingTop: 10}}>
-          <Text>{EmpID + '----' + Auth.emp_id}</Text>
+        <View style={{flex: 1, paddingTop: 10, backgroundColor: COLOR.white}}>
           <ScrollView
             refreshControl={
               <RefreshControl
@@ -107,7 +75,7 @@ const ReportScreen = () => {
               />
             }>
             {reportData && reportData.length ? (
-              reportData.map((data: any, i: any) => {
+              reportData.map((data: any) => {
                 return (
                   <>
                     <View style={styles.ReportStatus}>
@@ -122,11 +90,7 @@ const ReportScreen = () => {
                               <Feather
                                 name="log-in"
                                 size={20}
-                                color={
-                                  val.type === 'checkin'
-                                    ? COLOR.success
-                                    : COLOR.warning
-                                }
+                                color={COLOR.success}
                               />
                               <Text style={styles.ReportStatusTxt1}>
                                 {val && val.type}
@@ -144,8 +108,7 @@ const ReportScreen = () => {
                           </View>
                         );
                       })}
-
-                      {/* <View style={styles.ReportStatusItem}>
+                      <View style={styles.ReportStatusItem}>
                         <View style={styles.ReportStatusItemCol1}>
                           <Feather
                             name="log-in"
@@ -159,10 +122,11 @@ const ReportScreen = () => {
                         <View style={styles.ReportStatusItemCol2}>
                           <Text style={styles.ReportStatusTxt2}>
                             {moment(data[0]?.checkin_time).format('h:mm:ss A')}
+                            {/* {moment(data[0]?.checkin_time).format('MMM Do YYYY')} */}
                           </Text>
                         </View>
-                      </View> */}
-                      {/* <View style={styles.ReportStatusItem}>
+                      </View>
+                      <View style={styles.ReportStatusItem}>
                         <View style={styles.ReportStatusItemCol1}>
                           <Feather
                             name="log-out"
@@ -183,7 +147,7 @@ const ReportScreen = () => {
                             </Text>
                           </View>
                         ) : null}
-                      </View> */}
+                      </View>
                     </View>
                   </>
                 );
@@ -213,4 +177,60 @@ const ReportScreen = () => {
   );
 };
 
-export default ReportScreen;
+export default ViewUserLogs;
+
+const styles = StyleSheet.create({
+  ReportStatus: {
+    margin: 10,
+    backgroundColor: COLOR.grey10,
+    padding: 10,
+    // borderWidth: 1.5,
+    // borderColor: COLOR.grey3,
+    borderRadius: 7,
+    marginBottom: 10,
+  },
+
+  ReportStatusDate: {
+    color: COLOR.grey6,
+    fontFamily: FONT.bold,
+    fontSize: 15,
+    marginBottom: 5,
+  },
+
+  ReportStatusItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginVertical: 5,
+  },
+
+  ReportStatusTxt1: {
+    color: COLOR.grey3,
+    fontFamily: FONT.semibold,
+    fontSize: 16,
+    marginLeft: 20,
+    textTransform: 'capitalize',
+  },
+
+  ReportStatusTxt2: {
+    color: COLOR.grey6,
+    fontFamily: FONT.bold,
+    fontSize: 17,
+    marginLeft: 20,
+  },
+
+  ReportStatusItemCol1: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+
+  ReportStatusItemCol2: {},
+
+  HeaderRow: {
+    padding: 10,
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    marginRight: 10,
+  },
+});

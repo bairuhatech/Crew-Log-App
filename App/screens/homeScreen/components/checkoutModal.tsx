@@ -36,10 +36,16 @@ const CheckOutModal = (props: any) => {
   const [isNear, setIsNear] = useState(false);
   const [isError, setIsError] = useState(false);
 
+  // const specificLocation = {
+  //   latitude: 11.4826878,
+  //   longitude: 75.9944369,
+  //   radius: 10, //meters
+  // };
+
   const specificLocation = {
-    latitude: 11.4826878,
-    longitude: 75.9944369,
-    radius: 10, //meters
+    latitude: props.location && Number(props.location[0]?.latitude),
+    longitude: props.location && Number(props.location[0]?.longitude),
+    radius: props.location && Number(props.location[0]?.radius),
   };
 
   useEffect(() => {
@@ -64,8 +70,9 @@ const CheckOutModal = (props: any) => {
     checkLocationPermission();
   }, []);
 
-  const checkLocation = () => {
-    console.log('------- checkLocation');
+  useEffect(() => {
+    console.log('-------------------------------New Location check');
+    console.log('-----Locations ---> ', props.location);
     let currentLatitude: any;
     let currentLongitude: any;
     Geolocation.getCurrentPosition(
@@ -75,6 +82,36 @@ const CheckOutModal = (props: any) => {
         currentLongitude = longitude;
         setLatitude(String(latitude));
         setLongitude(String(longitude));
+
+        for (let i = 0; i < props.location?.length; i++) {
+          let Dist: any = calculateDistance(
+            latitude,
+            longitude,
+            props.location[i].latitude,
+            props.location[i].longitude,
+          );
+
+          console.log('-------------- Distance ---> ', Dist * 1000);
+          if (Dist * 1000 <= props.location[i].radius) {
+            console.log(
+              '-------------- You are in the location ---> ',
+              Dist * 1000,
+              'Meters',
+            );
+
+            setIsNear(true);
+            setCheckingLocation(false);
+            break;
+          } else {
+            console.log(
+              '-------------- You are in the location ---> ',
+              Dist * 1000,
+              'Meters',
+            );
+            setIsNear(false);
+            setCheckingLocation(false);
+          }
+        }
       },
       error => {
         console.log('Error getting current location:', error);
@@ -84,28 +121,50 @@ const CheckOutModal = (props: any) => {
         });
       },
     );
+  }, []);
 
-    // Example usage
-    const definedLatitude = 11.4826878; // Latitude of the defined location
-    const definedLongitude = 75.9944369; // Longitude of the defined location
+  // const checkLocation = () => {
+  //   console.log('------- checkLocation');
+  // let currentLatitude: any;
+  // let currentLongitude: any;
+  //   Geolocation.getCurrentPosition(
+  //     position => {
+  //       const {latitude, longitude} = position.coords;
+  // currentLatitude = latitude;
+  // currentLongitude = longitude;
+  // setLatitude(String(latitude));
+  // setLongitude(String(longitude));
+  //     },
+  //     error => {
+  //       console.log('Error getting current location:', error);
+  //       setIsError(true);
+  //       toast.show('unable to check your location', {
+  //         type: 'warning',
+  //       });
+  //     },
+  //   );
 
-    setTimeout(() => {
-      const distance = calculateDistance(
-        currentLatitude,
-        currentLongitude,
-        definedLatitude,
-        definedLongitude,
-      );
-      console.log('Distance ---------->>>> ', distance * 1000, 'km');
-      if (distance * 1000 <= 10) {
-        setIsNear(true);
-        setCheckingLocation(false);
-      } else {
-        setIsNear(false);
-        setCheckingLocation(false);
-      }
-    }, 500);
-  };
+  //   // Example usage
+  //   const definedLatitude = specificLocation.latitude; // Latitude of the defined location
+  //   const definedLongitude = specificLocation.longitude; // Longitude of the defined location
+
+  // setTimeout(() => {
+  //   const distance = calculateDistance(
+  //     currentLatitude,
+  //     currentLongitude,
+  //     definedLatitude,
+  //     definedLongitude,
+  //   );
+  //   console.log('Distance ---------->>>> ', distance * 1000, 'km');
+  //   if (distance * 1000 <= 10) {
+  //     setIsNear(true);
+  //     setCheckingLocation(false);
+  //   } else {
+  //     setIsNear(false);
+  //     setCheckingLocation(false);
+  //   }
+  // }, 500);
+  // };
 
   async function checkLocationPermission() {
     console.log('------- checkLocationPermission');
@@ -114,7 +173,7 @@ const CheckOutModal = (props: any) => {
         PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
       );
       if (permissionStatus === 'granted') {
-        checkLocation();
+        // checkLocation();
       } else if (permissionStatus === 'denied') {
         requestLocationPermission();
       } else {
@@ -133,7 +192,7 @@ const CheckOutModal = (props: any) => {
         PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
       );
       if (permissionStatus === 'granted') {
-        checkLocation();
+        // checkLocation();
       } else {
         console.log('Location permission denied or unavailable.');
       }
@@ -227,9 +286,7 @@ const CheckOutModal = (props: any) => {
       location_lat: latitude,
       location_long: longitude,
     };
-
     console.log('reqObj ===> ', reqObj);
-
     fetch(api, {
       method: 'POST',
       headers: {

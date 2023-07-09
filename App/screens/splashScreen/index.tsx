@@ -12,20 +12,6 @@ const SplashScreen = (props: any) => {
   const [isLoading, setisLoading] = useState(false);
 
   const Auth = useSelector((state: any) => state.Auth);
-  // console.log('Auth--> ', Auth.auth);
-  // useEffect(() => {
-  //   setTimeout(() => {
-  //     if (Auth.auth) {
-  //       navigation.reset('homeScreen' as never);
-  //     } else {
-  //       navigation.reset('loginScreen' as never);
-  //     }
-  //   }, 1500);
-  // }, [1]);
-
-  // useEffect(() => {
-  //   dispatch(logout({}));
-  // }, []);
 
   useEffect(() => {
     StatusBar.setTranslucent(true);

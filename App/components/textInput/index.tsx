@@ -1,10 +1,18 @@
-import {View, StyleSheet, Text, TextInput} from 'react-native';
+import {
+  View,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+} from 'react-native';
 import React, {useState} from 'react';
 import COLOR from '../../config/color';
 import FONT from '../../config/font';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const Textinput = (props: any) => {
   const [inputText, setInputText] = useState('');
+  const [show, setShow] = useState(true);
   return (
     <View style={styles.TextInput}>
       <Text style={styles.InputLabel}>{props.head}</Text>
@@ -15,15 +23,25 @@ const Textinput = (props: any) => {
         ]}>
         <TextInput
           style={styles.Input}
+          secureTextEntry={props.password && show}
           keyboardType={props.keyboard ? props.keyboard : 'default'}
           // keyboardType='email-address'
           // keyboardType='number-pad'
-          value={inputText}
+          defaultValue={props.value}
           onChangeText={(text: any) => {
             props.onChange(text);
             setInputText(text);
           }}
         />
+        {props.password ? (
+          <TouchableOpacity onPress={() => setShow(!show)}>
+            <Ionicons
+              name={!show ? 'eye-off' : 'eye'}
+              color={COLOR.grey3}
+              size={20}
+            />
+          </TouchableOpacity>
+        ) : null}
       </View>
       {props.error ? (
         <Text

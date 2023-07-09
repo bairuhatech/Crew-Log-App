@@ -1,31 +1,12 @@
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {Image, StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import COLOR from '../../../config/color';
 import FONT from '../../../config/font';
 import moment from 'moment';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 
-const UserItem = (props: any) => {
+const UserItemLog = (props: any) => {
   return (
     <View style={styles.UserItem}>
-      <View
-        style={{
-          width: '100%',
-          justifyContent: 'flex-end',
-          alignItems: 'center',
-          flexDirection: 'row',
-          height: 25,
-        }}>
-        <TouchableOpacity
-          onPress={() => {
-            console.log(props.data.emp_id);
-            
-            props.onDeletePress(props.data.emp_id);
-          }}>
-          <Ionicons color={COLOR.warning} size={25} name="trash" />
-        </TouchableOpacity>
-      </View>
-
       <View style={styles.UserItemCol2}>
         <View style={styles.UserItemTextItem}>
           <Text style={styles.UserItemTextItemTxt1}>Name</Text>
@@ -42,32 +23,11 @@ const UserItem = (props: any) => {
         </View>
 
         <View style={styles.UserItemTextItem}>
-          <Text style={styles.UserItemTextItemTxt1}>Email</Text>
-          <Text style={styles.UserItemTextItemTxt2}>:</Text>
-          <Text style={styles.UserItemTextItemTxt3}>{props.data.email}</Text>
-        </View>
-
-        <View style={styles.UserItemTextItem}>
           <Text style={styles.UserItemTextItemTxt1}>Phone</Text>
           <Text style={styles.UserItemTextItemTxt2}>:</Text>
           <Text style={styles.UserItemTextItemTxt3}>{props.data.phone}</Text>
         </View>
 
-        <View style={styles.UserItemTextItem}>
-          <Text style={styles.UserItemTextItemTxt1}>Role</Text>
-          <Text style={styles.UserItemTextItemTxt2}>:</Text>
-          <Text style={styles.UserItemTextItemTxt3}>
-            {props.data.designation}
-          </Text>
-        </View>
-
-        <View style={styles.UserItemTextItem}>
-          <Text style={styles.UserItemTextItemTxt1}>Joined</Text>
-          <Text style={styles.UserItemTextItemTxt2}>:</Text>
-          <Text style={styles.UserItemTextItemTxt3}>
-            {moment(props.data.join_date).format('DD-MM-YYYY')}
-          </Text>
-        </View>
         <View style={styles.UserItemTextItem}>
           <Text style={styles.UserItemTextItemTxt1}>Log In</Text>
           <Text style={styles.UserItemTextItemTxt2}>:</Text>
@@ -88,15 +48,16 @@ const UserItem = (props: any) => {
   );
 };
 
-export default UserItem;
+export default UserItemLog;
 
 const styles = StyleSheet.create({
   UserItem: {
-    margin: 10,
+    marginHorizontal: 10,
+    marginVertical: 5,
     borderColor: COLOR.grey8,
     borderWidth: 1.5,
     borderRadius: 7,
-    // flexDirection: 'row',
+    flexDirection: 'row',
     alignItems: 'center',
     padding: 5,
   },

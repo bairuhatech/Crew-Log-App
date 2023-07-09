@@ -34,15 +34,17 @@ const Admin = () => {
             style={styles.AdminActionItem}
             onPress={() => navigation.navigate('addUser' as never)}>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <Ionicons size={20} color={COLOR.white} name="people" />
-              <Text style={styles.AdminActionTxt}>Add Users</Text>
+              <Ionicons size={18} color={COLOR.white} name="person-add" />
+              <Text style={styles.AdminActionTxt}>Create User</Text>
             </View>
             <View>
               <Ionicons size={20} color={COLOR.white} name="chevron-forward" />
             </View>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.AdminActionItem}>
+          <TouchableOpacity
+            style={styles.AdminActionItem}
+            onPress={() => navigation.navigate('userLogs' as never)}>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <Ionicons size={20} color={COLOR.white} name="layers" />
               <Text style={styles.AdminActionTxt}>View All Logs</Text>
@@ -52,7 +54,9 @@ const Admin = () => {
             </View>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.AdminActionItem}>
+          <TouchableOpacity
+            style={styles.AdminActionItem}
+            onPress={() => navigation.navigate('location' as never)}>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <Ionicons size={20} color={COLOR.white} name="location" />
               <Text style={styles.AdminActionTxt}>Location</Text>

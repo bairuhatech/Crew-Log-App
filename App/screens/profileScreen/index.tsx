@@ -32,7 +32,7 @@ const ProfileScreen = () => {
     setLogoff(false);
     setisLoading(true);
     setTimeout(() => {
-      dispatch<any>(logout({}));
+      dispatch<any>(logout());
       setisLoading(false);
       navigation.navigate('loginScreen' as never);
     }, 1000);
@@ -101,14 +101,14 @@ const ProfileScreen = () => {
           </View>
 
           <View style={styles.ProfileOptions}>
-            <TouchableOpacity style={styles.ProfileOptionsItem}>
+            {/* <TouchableOpacity style={styles.ProfileOptionsItem}>
               <Feather name="edit" size={18} color={COLOR.grey2} />
               <Text style={styles.ProfileOptionsText}>Edit Profile</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.ProfileOptionsItem}>
               <Feather name="settings" size={18} color={COLOR.grey2} />
               <Text style={styles.ProfileOptionsText}>Settings</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
             <TouchableOpacity
               onPress={() => {
                 setLogoff(true);

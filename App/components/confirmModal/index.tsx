@@ -5,6 +5,7 @@ import FONT from '../../config/font';
 import Modal from 'react-native-modal';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Feather from 'react-native-vector-icons/Feather';
+import Loader from '../loader';
 
 const ConfirmModal = (props: any) => {
   return (
@@ -31,7 +32,7 @@ const ConfirmModal = (props: any) => {
                 style={{
                   flexDirection: 'column',
                   alignItems: 'center',
-                  justifyContent: 'space-between',
+                  justifyContent: 'center',
                   marginTop: 30,
                 }}>
                 <Feather name="alert-circle" color={COLOR.alert} size={60} />
@@ -40,7 +41,8 @@ const ConfirmModal = (props: any) => {
                     color: COLOR.grey1,
                     marginTop: 25,
                     fontFamily: FONT.semibold,
-                    fontSize: 15,
+                    fontSize: 14,
+                    paddingHorizontal: 10,
                   }}>
                   {props.text}
                 </Text>
@@ -63,7 +65,11 @@ const ConfirmModal = (props: any) => {
             <TouchableOpacity
               onPress={() => props.onSelect()}
               style={styles.primaryBtn}>
-              <Text style={styles.primaryBtnTxt}>Yes</Text>
+              {props.loading ? (
+                <Loader color={COLOR.white} />
+              ) : (
+                <Text style={styles.primaryBtnTxt}>Yes</Text>
+              )}
             </TouchableOpacity>
           </View>
         </View>

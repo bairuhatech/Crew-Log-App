@@ -1,11 +1,8 @@
-import * as React from 'react';
+import React, {useState} from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-
 import COLOR from '../config/color';
 import styles from './styles';
-
 import SplashScreen from '../screens/splashScreen';
 import HomeScreen from '../screens/homeScreen';
 import ReportScreen from '../screens/reportScreen';
@@ -20,24 +17,35 @@ import Feather from 'react-native-vector-icons/Feather';
 import SettingsScreen from '../screens/settingsScreen';
 import {useSelector} from 'react-redux';
 import AddUser from '../screens/adminActions/addUser';
+import Location from '../screens/adminActions/location';
+import AddLocation from '../screens/adminActions/addLocation';
+import UserLogs from '../screens/adminActions/userLogs';
+import ViewUserLogs from '../screens/adminActions/viewUserLogs';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import ResetPassword from '../screens/loginScreen/resetPassword';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
 function HomeTabs(props: any) {
   const Auth = useSelector((state: any) => state.Auth.user);
+  const [tabChange, setTabChange] = useState(false);
+
+  const handleTabPress = () => {
+    // Function to be called when tab is pressed
+    console.log('Tab pressed!');
+  };
 
   return (
     <Tab.Navigator
       screenOptions={({route}: any) => ({
+        tabBarOnPress: handleTabPress,
         tabBarStyle: styles.tabBarStyle,
         tabBarOptions: {
           style: styles.tabBarOptions,
         },
         tabBarLabelStyle: styles.tabBarLabelStyle,
         tabBarIcon: (props: any) => {
-          // console.log(route.name);
-
           let Icons: any;
           let Color: any;
           if (route.name === 'Home') {
@@ -152,6 +160,51 @@ export default function Routes() {
         component={SettingsScreen}
         options={{
           title: 'Settings',
+          headerStyle: styles.screenHeader,
+          headerTitleStyle: styles.screenHeaderTxt,
+        }}
+      />
+      <Stack.Screen
+        name="location"
+        component={Location}
+        options={{
+          title: 'Location',
+          headerStyle: styles.screenHeader,
+          headerTitleStyle: styles.screenHeaderTxt,
+        }}
+      />
+      <Stack.Screen
+        name="addLocation"
+        component={AddLocation}
+        options={{
+          title: 'Add Location',
+          headerStyle: styles.screenHeader,
+          headerTitleStyle: styles.screenHeaderTxt,
+        }}
+      />
+      <Stack.Screen
+        name="userLogs"
+        component={UserLogs}
+        options={{
+          title: 'Select User',
+          headerStyle: styles.screenHeader,
+          headerTitleStyle: styles.screenHeaderTxt,
+        }}
+      />
+      <Stack.Screen
+        name="viewUserLogs"
+        component={ViewUserLogs}
+        options={{
+          title: 'Logs',
+          headerStyle: styles.screenHeader,
+          headerTitleStyle: styles.screenHeaderTxt,
+        }}
+      />
+      <Stack.Screen
+        name="resetPassword"
+        component={ResetPassword}
+        options={{
+          title: 'Reset Password',
           headerStyle: styles.screenHeader,
           headerTitleStyle: styles.screenHeaderTxt,
         }}

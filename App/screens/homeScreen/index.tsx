@@ -18,29 +18,33 @@ import CheckOutModal from './components/checkoutModal';
 import {useSelector} from 'react-redux';
 import {useToast} from 'react-native-toast-notifications';
 import {useNavigation} from '@react-navigation/core';
+import API from '../../config/API';
+import LoadingModal from '../../components/loadingModal';
 const HomeScreen = () => {
   const toast = useToast();
   const navigation = useNavigation();
   const Auth = useSelector((state: any) => state.Auth.user);
   const CheckedIn = useSelector((state: any) => state.Auth.checkin);
   const CheckedOut = useSelector((state: any) => state.Auth.checkout);
-
-  console.log('Auth--> ', Auth);
-  // console.log('CheckedIn--> ', CheckedIn);
-  // console.log('CheckedOut--> ', CheckedOut);
-
+  const [loading, setLoading] = useState(true);
   const [doCheckin, setDocheckin] = useState(false);
   const [doCheckout, setDocheckout] = useState(false);
   const [greeting, setGreeting] = useState('');
+  const [locations, setLocations] = useState([]);
+
+  useEffect(() => {
+    setLoading(true);
+    getLocations();
+  }, []);
 
   useEffect(() => {
     checkLocationPermission();
   }, []);
 
   useEffect(() => {
+    setLoading(true);
     const currentTime = new Date().getHours();
     let newGreeting = '';
-
     if (currentTime >= 5 && currentTime < 12) {
       newGreeting = 'Good Morning';
     } else if (currentTime >= 12 && currentTime < 17) {
@@ -48,16 +52,41 @@ const HomeScreen = () => {
     } else {
       newGreeting = 'Good Evening';
     }
-
     setGreeting(newGreeting);
   }, []);
 
+  const getLocations = () => {
+    setLoading(true);
+    let api = API.BASE_URL + API.GET_LOCATIONS + '?order=ASC&page=1&take=100';
+    fetch(api, {
+      method: 'get',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+    })
+      .then(data => data.json())
+      .then(location => {
+        console.log('location success==> ');
+        setLocations(location);
+        setLoading(false);
+        console.log('location==> ', location);
+      })
+      .catch(error => {
+        console.log('Service Error ===>>', error);
+      });
+  };
+
   async function checkLocationPermission() {
+    setLoading(true);
     try {
       const permissionStatus = await check(
         PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
       );
       if (permissionStatus === 'granted') {
+        setTimeout(() => {
+          setLoading(false);
+        }, 1000);
       } else if (permissionStatus === 'denied') {
         requestLocationPermission();
       } else {
@@ -68,13 +97,16 @@ const HomeScreen = () => {
     }
   }
 
-  // Function to request location permission
   async function requestLocationPermission() {
+    setLoading(true);
     try {
       const permissionStatus = await request(
         PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
       );
       if (permissionStatus === 'granted') {
+        setTimeout(() => {
+          setLoading(false);
+        }, 1000);
       } else {
         console.log('Location permission denied or unavailable.');
       }
@@ -82,9 +114,12 @@ const HomeScreen = () => {
       console.log('Error requesting location permission:', error);
     }
   }
+
   return (
     <View style={{flex: 1, backgroundColor: COLOR.white}}>
-      <ScrollView>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        showsHorizontalScrollIndicator={false}>
         <View style={{height: 180, padding: 10}}>
           <View style={styles.headerRow}>
             <TouchableOpacity
@@ -118,20 +153,23 @@ const HomeScreen = () => {
               <View style={styles.buttonInfo}>
                 <Text style={styles.buttonInfoTxt1}>Check In Time</Text>
                 <Text style={styles.buttonInfoTxt2}>
-                  {/* {moment(Auth.login_time).format('LT')} */}
-                  {/* {moment(Auth.login_time).format('dddd D MMMM, YYYY')} */}
-                  
+                  {moment(Auth.login_time).format('h:mm A')}
                 </Text>
               </View>
               <TouchableOpacity
-                style={CheckedIn ? styles.inButtonFade : styles.inButton}
-                onPress={() => {
-                  CheckedIn
-                    ? toast.show('Already Checked In !', {
-                        type: 'danger',
-                      })
-                    : setDocheckin(true);
-                }}>
+                // onPress={() => {
+                //   CheckedIn
+                //     ? toast.show('Already Checked In !', {
+                //         type: 'danger',
+                //       })
+                //     : setDocheckin(true);
+
+                //   toast.show('Location error. Please contact Admin !', {
+                //     type: 'danger',
+                //   })
+                // }}
+                onPress={() => setDocheckin(true)}
+                style={CheckedIn ? styles.inButtonFade : styles.inButton}>
                 <Text style={styles.buttonTxt1}>Check In</Text>
                 <Feather size={20} color={COLOR.grey10} name="log-in" />
               </TouchableOpacity>
@@ -141,19 +179,20 @@ const HomeScreen = () => {
               <View style={styles.buttonInfo}>
                 <Text style={styles.buttonInfoTxt1}>Check Out Time</Text>
                 <Text style={styles.buttonInfoTxt2}>
-                  {moment(Auth.logout_time).format('LT')}
+                  {moment(Auth.logout_time).format('h:mm A')}
                 </Text>
               </View>
               <TouchableOpacity
                 // disabled={CheckedOut ? true : false}
-                style={CheckedOut ? styles.inButtonFade : styles.inButton}
-                onPress={() => {
-                  CheckedOut
-                    ? toast.show('Check In First !', {
-                        type: 'danger',
-                      })
-                    : setDocheckout(true);
-                }}>
+                onPress={() => setDocheckout(true)}
+                // onPress={() => {
+                //   CheckedOut
+                //     ? toast.show('Check In First !', {
+                //         type: 'danger',
+                //       })
+                //     : setDocheckout(true);
+                // }}
+                style={CheckedOut ? styles.inButtonFade : styles.inButton}>
                 <Text style={styles.buttonTxt1}>Check Out</Text>
                 <Feather size={20} color={COLOR.grey10} name="log-out" />
               </TouchableOpacity>
@@ -172,14 +211,29 @@ const HomeScreen = () => {
         </View>
       </ScrollView>
       {doCheckin && (
-        <CheckinModal visible={doCheckin} close={() => setDocheckin(false)} />
+        <CheckinModal
+          location={locations}
+          visible={doCheckin}
+          close={() => setDocheckin(false)}
+        />
       )}
       {doCheckout && (
         <CheckOutModal
+          location={locations}
           visible={doCheckout}
           close={() => setDocheckout(false)}
         />
       )}
+
+      {loading ? (
+        <LoadingModal
+          text={'Loading...'}
+          visible={loading}
+          // close={() => setisLoading(false)}
+        />
+      ) : null}
+
+      {/* {loading ? <LoadingModal visible={true} text="Loading" /> : null} */}
     </View>
   );
 };

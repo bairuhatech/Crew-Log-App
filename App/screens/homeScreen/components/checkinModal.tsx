@@ -1,4 +1,10 @@
-import {ActivityIndicator, Text, TouchableOpacity, View} from 'react-native';
+import {
+  ActivityIndicator,
+  Image,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import Modal from 'react-native-modal';
 import MapView, {Marker} from 'react-native-maps';
@@ -19,12 +25,12 @@ import Loader from '../../../components/loader';
 import {useToast} from 'react-native-toast-notifications';
 import {useDispatch} from 'react-redux';
 import {checkin} from '../../../redux/Slices/AuthSlice';
-import moment from 'moment';
+import Location from '../../adminActions/location';
 
 const CheckinModal = (props: any) => {
   const dispatch = useDispatch();
   const Auth = useSelector((state: any) => state.Auth);
-  // console.log('Auth--> ', Auth.user);
+  // console.log('---- Auth-----> ', Auth);
   const toast = useToast();
   const [deviceId, setDeviceId] = useState('');
   const [macAddress, setMacAddress] = useState('');
@@ -37,15 +43,6 @@ const CheckinModal = (props: any) => {
   const [isNear, setIsNear] = useState(false);
   const [isError, setIsError] = useState(false);
   const [date, setDate] = useState(new Date().toString());
-
-  console.log('latitude --> ', latitude);
-  console.log('longitude --> ', longitude);
-
-  const specificLocation = {
-    latitude: 11.4826878,
-    longitude: 75.9944369,
-    radius: 10, //meters
-  };
 
   useEffect(() => {
     if (Platform.OS === 'android') {
@@ -69,11 +66,10 @@ const CheckinModal = (props: any) => {
 
   useEffect(() => {
     checkLocationPermission();
-    // getLocations();
   }, []);
 
-  const checkLocation = () => {
-    console.log('------- checkLocation');
+  useEffect(() => {
+    console.log('-------------------------------New Location check');
     let currentLatitude: any;
     let currentLongitude: any;
     Geolocation.getCurrentPosition(
@@ -83,6 +79,36 @@ const CheckinModal = (props: any) => {
         currentLongitude = longitude;
         setLatitude(String(latitude));
         setLongitude(String(longitude));
+
+        for (let i = 0; i < props.location?.length; i++) {
+          let Dist: any = calculateDistance(
+            latitude,
+            longitude,
+            props.location[i].latitude,
+            props.location[i].longitude,
+          );
+
+          console.log('-------------- Distance ---> ', Dist * 1000);
+          if (Dist * 1000 <= props.location[i].radius) {
+            console.log(
+              '-------------- You are in the location ---> ',
+              Dist * 1000,
+              'Meters',
+            );
+
+            setIsNear(true);
+            setCheckingLocation(false);
+            break;
+          } else {
+            console.log(
+              '-------------- You are in the location ---> ',
+              Dist * 1000,
+              'Meters',
+            );
+            setIsNear(false);
+            setCheckingLocation(false);
+          }
+        }
       },
       error => {
         console.log('Error getting current location:', error);
@@ -92,44 +118,60 @@ const CheckinModal = (props: any) => {
         });
       },
     );
+  }, []);
 
-    // Example usage
-    const definedLatitude = 11.4826878; // Latitude of the defined location
-    const definedLongitude = 75.9944369; // Longitude of the defined location
-
-    setTimeout(() => {
-      const distance = calculateDistance(
-        currentLatitude,
-        currentLongitude,
-        definedLatitude,
-        definedLongitude,
-      );
-      console.log('Distance ---------->>>> ', distance * 1000, 'km');
-      if (distance * 1000 <= 10) {
-        setIsNear(true);
-        setCheckingLocation(false);
-      } else {
-        setIsNear(false);
-        setCheckingLocation(false);
-      }
-    }, 500);
+  const specificLocation = {
+    latitude: props.location && Number(props.location[0]?.latitude),
+    longitude: props.location && Number(props.location[0]?.longitude),
+    radius: props.location && Number(props.location[0]?.radius),
   };
 
-  // const getLocations = () => {
-  //   let api = API.BASE_URL + API.GET_LOCATIONS;
-  //   fetch(api)
-  //     .then(response => {
-  //       if (!response.ok) {
-  //         throw new Error('Network response was not ok');
-  //       }
-  //       return response.json();
-  //     })
-  //     .then(data => {
-  //       console.log('Locations: ', data);
-  //     })
-  //     .catch(error => {
-  //       console.error('Error:', error);
-  //     });
+  // console.log('Props.Location: ' + props.location);
+
+  // console.log('latitude --> ', typeof props.location[0].latitude);
+  // console.log('longitude --> ', typeof props.location[0].longitude);
+  // console.log('radius --> ', typeof props.location[0].radius);
+
+  // const checkLocation = () => {
+  //   console.log('------- checkLocation');
+  //   let currentLatitude: any;
+  //   let currentLongitude: any;
+  //   Geolocation.getCurrentPosition(
+  //     position => {
+  //       const {latitude, longitude} = position.coords;
+  //       currentLatitude = latitude;
+  //       currentLongitude = longitude;
+  //       setLatitude(String(latitude));
+  //       setLongitude(String(longitude));
+  //     },
+  //     error => {
+  //       console.log('Error getting current location:', error);
+  //       setIsError(true);
+  //       toast.show('unable to check your location', {
+  //         type: 'warning',
+  //       });
+  //     },
+  //   );
+  //   const definedLatitude = specificLocation.latitude;
+  //   const definedLongitude = specificLocation.longitude;
+
+  //   setTimeout(() => {
+  //     const distance = calculateDistance(
+  //       currentLatitude,
+  //       currentLongitude,
+  //       definedLatitude,
+  //       definedLongitude,
+  //     );
+
+  //     console.log('Distance ---------->>>> ', distance * 1000, 'Meters');
+  //     if (distance * 1000 <= specificLocation.radius) {
+  //     setIsNear(true);
+  //     setCheckingLocation(false);
+  //     } else {
+  //       setIsNear(false);
+  //       setCheckingLocation(false);
+  //     }
+  //   }, 500);
   // };
 
   async function checkLocationPermission() {
@@ -139,7 +181,7 @@ const CheckinModal = (props: any) => {
         PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
       );
       if (permissionStatus === 'granted') {
-        checkLocation();
+        // checkLocation();
       } else if (permissionStatus === 'denied') {
         requestLocationPermission();
       } else {
@@ -149,16 +191,14 @@ const CheckinModal = (props: any) => {
       console.log('Error checking location permission:', error);
     }
   }
-
   async function requestLocationPermission() {
     console.log('---------- requestLocationPermission');
-
     try {
       const permissionStatus = await request(
         PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
       );
       if (permissionStatus === 'granted') {
-        checkLocation();
+        // checkLocation();
       } else {
         console.log('Location permission denied or unavailable.');
       }
@@ -166,66 +206,14 @@ const CheckinModal = (props: any) => {
       console.log('Error requesting location permission:', error);
     }
   }
-
-  // =========================================
-  // const calculateDistance = (lat1: any, lon1: any, lat2: any, lon2: any) => {
-  //   setCheckingLocation(true);
-  //   const R = 6371; // Earth's radius in kilometers
-  //   const dLat = ((lat2 - lat1) * Math.PI) / 180;
-  //   const dLon = ((lon2 - lon1) * Math.PI) / 180;
-  //   const a =
-  //     Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-  //     Math.cos((lat1 * Math.PI) / 180) *
-  //       Math.cos((lat2 * Math.PI) / 180) *
-  //       Math.sin(dLon / 2) *
-  //       Math.sin(dLon / 2);
-  //   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  //   const distance = R * c * 1000; // Distance in meters
-  //   return distance;
-  // };
-
-  // const checkDistanceFromTarget = () => {
-  //   Geolocation.getCurrentPosition(
-  //     position => {
-  //       const {latitude, longitude} = position.coords;
-  //       setLatitude(String(latitude));
-  //       setLongitude(String(longitude));
-  //       const distance = calculateDistance(
-  //         latitude,
-  //         longitude,
-  //         specificLocation.latitude,
-  //         specificLocation.longitude,
-  //       );
-  //       if (distance <= specificLocation.radius) {
-  //         // Your current location is within 5 meters of the target location
-  //         console.log('You are near the target location!');
-  //         setIsNear(true);
-  //         setTimeout(() => {
-  //           setCheckingLocation(false);
-  //         }, 1000);
-  //       } else {
-  //         // Your current location is not within 5 meters of the target location
-  //         console.log('You are not near the target location.');
-  //         setIsNear(false);
-  //         setCheckingLocation(false);
-  //       }
-  //     },
-  //     error => {
-  //       console.log('Error getting current location:', error);
-  //       setIsError(true);
-  //     },
-  //   );
-  // };
-
-  // =
-  // =
-  // =
-  // =
-  // =
-
   // Function to calculate the distance between two points using the Haversine formula
   const calculateDistance = (lat1: any, lon1: any, lat2: any, lon2: any) => {
-    console.log('----------- calculateDistance');
+    console.log('========================================================');
+
+    // console.log('Lat 1 ---> ', lat1);
+    // console.log('Long 1 ---> ', lon1);
+    // console.log('Lat 2 ---> ', lat2);
+    // console.log('Long 2 ---> ', lon2);
 
     const R = 6371; // Radius of the Earth in kilometers
     const dLat = toRad(lat2 - lat1);
@@ -246,12 +234,6 @@ const CheckinModal = (props: any) => {
     return degrees * (Math.PI / 180);
   }
 
-  // =
-  // =
-  // =
-  // =
-  // =
-
   const doCheckIn = () => {
     setIsLoading(true);
     let api = API.BASE_URL + API.MARK_ATTENDANCE;
@@ -267,9 +249,7 @@ const CheckinModal = (props: any) => {
       location_lat: latitude,
       location_long: longitude,
     };
-
     console.log('reqObj ===> ', reqObj);
-
     fetch(api, {
       method: 'POST',
       headers: {
@@ -318,7 +298,7 @@ const CheckinModal = (props: any) => {
             </View>
 
             <View>
-              <MapView
+              {/* <MapView
                 style={{height: 200, borderRadius: 10}}
                 initialRegion={{
                   ...specificLocation,
@@ -326,7 +306,20 @@ const CheckinModal = (props: any) => {
                   longitudeDelta: 0.0421,
                 }}>
                 <Marker coordinate={specificLocation} />
-              </MapView>
+              </MapView> */}
+
+              <View
+                style={{
+                  width: '100%',
+                  height: 180,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}>
+                <Image
+                  source={require('../../../assets/images/location.gif')}
+                  style={{width: 100, height: 100}}
+                />
+              </View>
 
               <View style={styles.locationMsgBox}>
                 {checkingLocation ? (

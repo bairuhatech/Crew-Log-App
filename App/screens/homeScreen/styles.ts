@@ -163,7 +163,7 @@ export default StyleSheet.create({
     marginTop: 20,
     // backgroundColor: 'red',
     minHeight: 30,
-    alignItems: 'flex-start',
+    alignItems: 'center',
     justifyContent: 'center',
     flexDirection: 'column',
   },

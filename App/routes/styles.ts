@@ -5,7 +5,8 @@ import FONT from '../config/font';
 export default StyleSheet.create({
   tabBarStyle: {
     backgroundColor: COLOR.primary,
-    height: 50,
+    height: 55,
+    paddingBottom: 5,
   },
   tabBarOptions: {
     backgroundColor: COLOR.primary,
@@ -17,8 +18,6 @@ export default StyleSheet.create({
   },
 
   screenHeader: {
-    // alignItems:'center',
-    // justifyContent:'center',
     backgroundColor: COLOR.white,
     shadowColor: '#000',
     shadowOffset: {
