@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {StatusBar, Text, TouchableOpacity, View} from 'react-native';
+import {StatusBar, Text, TouchableOpacity, View, Alert} from 'react-native';
 import COLOR from '../../Config/COLOR';
 import styles from './styles';
 import LinearGradient from 'react-native-linear-gradient';
@@ -70,21 +70,26 @@ export default function HomeScreen() {
       try {
         let available: any = await getLocations();
         let locatons: any = await getLocations();
-        for (let i = 0; i < available?.length; i++) {
-          let Dist: any = calculateDistance(
-            locatons.latitude,
-            locatons.longitude,
-            available[i].latitude,
-            available[i].longitude,
-          );
-          if (Dist * 1000 <= available[i].radius) {
-            setIsNear(true);
-            resolve(true);
-            break;
-          } else {
-            setIsNear(false);
-            resolve(false);
+        if (available && available.length) {
+          var check = null;
+          for (let i = 0; i < available?.length; i++) {
+            let Dist: any = calculateDistance(
+              locatons.latitude,
+              locatons.longitude,
+              available[i].latitude,
+              available[i].longitude,
+            );
+            if (Dist * 1000 <= available[i].radius) {
+              check = true;
+              break;
+            } else {
+              check = false;
+            }
+            console.log(i);
           }
+          resolve(check);
+        } else {
+          locationAlert();
         }
       } catch (error) {
         resolve(false);
@@ -122,6 +127,7 @@ export default function HomeScreen() {
         }
       } else {
         setProcesso(false);
+        locationAlert();
       }
     } catch (err) {
       console.log(err);
@@ -157,11 +163,26 @@ export default function HomeScreen() {
         }
       } else {
         setProcesso(false);
+        locationAlert();
       }
     } catch (err) {
       console.log(err);
       setProcesso(true);
     }
+  };
+
+  const locationAlert = () => {
+    Alert.alert('You are away from the location', 'Check Your Location...', [
+      {
+        text: 'Cancel',
+        onPress: () => console.log('Cancel Pressed'),
+        style: 'cancel',
+      },
+      {
+        text: 'OK',
+        onPress: () => console.log('Cancel Pressed'),
+      },
+    ]);
   };
 
   return (
