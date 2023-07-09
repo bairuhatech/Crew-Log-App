@@ -13,11 +13,14 @@ import HomeScreen from '../UserScreens/HomeScreen';
 import Reportscreen from '../UserScreens/Reportscreen';
 import ProfileScreen from '../UserScreens/ProfileScreen';
 import SettingScreen from '../UserScreens/SettingScreen';
+
 import AdminScreen from '../AdminScreen';
 import AllUsers from '../AdminScreen/AllUsers';
 import CreateUser from '../AdminScreen/CreateUser';
 import Location from '../AdminScreen/Location';
 import ViewAllLogs from '../AdminScreen/ViewAllLogs';
+import UserViseLogs from '../AdminScreen/ViewAllLogs/UserViseLogs';
+import AddLocation from '../AdminScreen/Location/AddLocation';
 
 const Stack = createNativeStackNavigator();
 const Tabs = createBottomTabNavigator();
@@ -94,6 +97,16 @@ export default function Navigation() {
         name="AdminViewLog"
         options={HeaderStyle('All Logs')}
         component={ViewAllLogs}
+      />
+      <Stack.Screen
+        name="UserViseLogs"
+        options={HeaderStyle('All logs')}
+        component={UserViseLogs}
+      />
+      <Stack.Screen
+        name="AddLocation"
+        options={HeaderStyle('Add New Office')}
+        component={AddLocation}
       />
     </Stack.Navigator>
   );

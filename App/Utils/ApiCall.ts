@@ -18,6 +18,25 @@ const GET = async (url: any, params: any) => {
   });
 };
 
+const PUT = async (url: any, params: any) => {
+  return new Promise(async (resolve, reject) => {
+    fetch(API.BASE_URL + url, {
+      method: 'put',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+    })
+      .then(response => response.json())
+      .then(json => {
+        resolve(json);
+      })
+      .catch(error => {
+        reject(error);
+      });
+  });
+};
+
 const POST = async (url: any, body: any) => {
   return new Promise(async (resolve, reject) => {
     fetch(API.BASE_URL + url, {
@@ -38,4 +57,4 @@ const POST = async (url: any, body: any) => {
   });
 };
 
-export {GET, POST};
+export {GET, POST, PUT};

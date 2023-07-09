@@ -46,7 +46,7 @@ export default function AdminScreen() {
         onPress={() => navigation.navigate('AdminLocation' as never)}>
         <Ionicons size={20} color={COLOR.primary} name="location" />
         <View style={{flex: 1}}>
-          <Text style={styles.AdminActionTxt}>Location</Text>
+          <Text style={styles.AdminActionTxt}>Offices</Text>
         </View>
         <Ionicons size={20} color={COLOR.grey3} name="chevron-forward" />
       </TouchableOpacity>

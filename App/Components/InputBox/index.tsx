@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
   },
   Input: {
     flex: 1,
-    fontFamily: Fonts.regular,
+    fontFamily: Fonts.medium,
     fontSize: 14,
     padding: Platform.OS === 'ios' ? 12 : 7,
     color: '#000',
