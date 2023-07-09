@@ -10,7 +10,7 @@ import styles from './styles';
 import SplashScreen from '../UserScreens/SplashScreen';
 import LoginScreen from '../UserScreens/LoginScreen';
 import HomeScreen from '../UserScreens/HomeScreen';
-import LogScreen from '../UserScreens/LogScreen';
+import Reportscreen from '../UserScreens/Reportscreen';
 import ProfileScreen from '../UserScreens/ProfileScreen';
 import SettingScreen from '../UserScreens/SettingScreen';
 import AdminScreen from '../AdminScreen';
@@ -35,7 +35,7 @@ function HomeTabs() {
         headerRight: () => <SettingsIcon />,
       })}>
       <Tabs.Screen name="Home" component={HomeScreen} />
-      <Tabs.Screen name="Logs" component={LogScreen} />
+      <Tabs.Screen name="Report" component={Reportscreen} />
       <Tabs.Screen name="Profile" component={ProfileScreen} />
       {Auth.admin ? <Tabs.Screen name="More" component={AdminScreen} /> : null}
     </Tabs.Navigator>

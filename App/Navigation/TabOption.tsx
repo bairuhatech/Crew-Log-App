@@ -6,7 +6,7 @@ export const TabIcons = (route: any, focused: any, color: any, size: any) => {
   let iconName: string = '';
   if (route.name === 'Home') {
     iconName = focused ? 'home' : 'home-outline';
-  } else if (route.name === 'Logs') {
+  } else if (route.name === 'Report') {
     iconName = focused ? 'documents' : 'documents-outline';
   } else if (route.name === 'Profile') {
     iconName = focused ? 'person-circle' : 'person-circle-outline';

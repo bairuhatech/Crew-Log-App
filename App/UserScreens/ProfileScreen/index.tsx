@@ -42,7 +42,9 @@ export default function ProfileScreen() {
       <StatusBar backgroundColor={COLOR.White} barStyle={'dark-content'} />
       <View style={styles.box1}>
         <Ionicons name="person-circle-outline" style={styles.propic} />
-        <Text style={styles.txt1}>Abdul Riyas</Text>
+        <Text style={styles.txt1}>
+          {User.first_name + ' ' + User.last_name}
+        </Text>
         <View style={styles.box3}>
           <TouchableOpacity style={styles.box4}>
             <Text style={styles.txt5}>user</Text>

@@ -9,7 +9,7 @@ import {GET} from '../../Utils/ApiCall';
 import styles from './styles';
 import ListItem from './components/ListItem';
 
-export default function LogScreen() {
+export default function Reportscreen() {
   const Auth = useSelector((state: any) => state.Auth.user);
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -40,7 +40,7 @@ export default function LogScreen() {
       ) : (
         <FlatList
           data={reportData}
-          renderItem={({item}) => <ListItem item={item.title} />}
+          renderItem={({item}) => <ListItem item={item} />}
           keyExtractor={(item: any) => item.uuid}
         />
       )}
