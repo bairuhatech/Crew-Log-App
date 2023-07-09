@@ -13,10 +13,10 @@ const Tabs = createBottomTabNavigator();
 
 function HomeTabs() {
   return (
-    <Tabs.Navigator initialRouteName="HomeTabs">
+    <Tabs.Navigator initialRouteName="Home">
       <Tabs.Screen name="Home" component={HomeScreen} />
-      <Tabs.Screen name="" component={LogScreen} />
-      <Tabs.Screen name="Notifications" component={ProfileScreen} />
+      <Tabs.Screen name="Logs" component={LogScreen} />
+      <Tabs.Screen name="Profile" component={ProfileScreen} />
     </Tabs.Navigator>
   );
 }

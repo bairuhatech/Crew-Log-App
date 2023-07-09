@@ -28,9 +28,9 @@ export default function SplashScreen(props: any) {
 
   return (
     <LinearGradient
-      colors={[COLOR.primary, '#fff', '#fff']}
+      colors={[COLOR.primary, COLOR.White, COLOR.White]}
       style={styles.SplashScreen}>
-      <StatusBar backgroundColor={COLOR.primary} />
+      <StatusBar backgroundColor={COLOR.primary} barStyle={'light-content'} />
       <Image
         source={require('../../Assets/images/logo.png')}
         style={styles.logo}

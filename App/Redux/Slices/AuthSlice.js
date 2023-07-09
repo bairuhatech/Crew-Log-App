@@ -11,13 +11,16 @@ const AuthSlice = createSlice({
       (state.user = action.payload), (state.auth = true), (state.guest = false);
     },
     logout: (state, action) => {
-      (state.user = {}), (state.auth = false);
+      (state.user = {}), (state.auth = false), (state.admin = false);
     },
     update: (state, action) => {
       state.user = {name: action.payload};
+    },
+    setAdmin: (state, action) => {
+      state.admin = {name: action.payload};
     },
   },
 });
 
 export default AuthSlice;
-export const {login, logout, update} = AuthSlice.actions;
+export const {login, logout, update, setAdmin} = AuthSlice.actions;
