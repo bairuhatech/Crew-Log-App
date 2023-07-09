@@ -68,6 +68,7 @@ export default StyleSheet.create({
     color: '#fff',
     fontFamily: Fonts.semibold,
     fontSize: 16,
+    marginTop: 10,
   },
   ProcessModal: {
     backgroundColor: COLOR.transparent,

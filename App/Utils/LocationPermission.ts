@@ -54,6 +54,10 @@ const getLocation = async () => {
 };
 
 const calculateDistance = (lat1: any, lon1: any, lat2: any, lon2: any) => {
+  console.log(lat1);
+  console.log(lon1);
+  console.log(lat2);
+  console.log(lon2);
   const R = 6371;
   const dLat = toRad(lat2 - lat1);
   const dLon = toRad(lon2 - lon1);

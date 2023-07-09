@@ -14,6 +14,7 @@ import {CheckiN, checkOUT} from '../../Redux/Slices/CheckInOut';
 import API from '../../Config/API';
 import {POST, GET} from '../../Utils/ApiCall';
 import ProcessModal from './Components/ProcessModal';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 export default function HomeScreen() {
   const dispatch = useDispatch();
   const Auth = useSelector((state: any) => state.Auth.user);
@@ -28,11 +29,11 @@ export default function HomeScreen() {
     setStatus(CheckInOut.status);
   }, [CheckInOut]);
 
-  const getLocations = async () => {
+  const getLocationsList = async () => {
     return new Promise(async (resolve, reject) => {
       try {
         let api = API.GET_LOCATIONS + '?order=ASC&page=1&take=100';
-        let datas = await GET(api, null);
+        let datas: any = await GET(api, null);
         if (datas && datas.length) {
           resolve(datas);
         } else {
@@ -68,8 +69,8 @@ export default function HomeScreen() {
   const checkRadiusAndoffice = async (data: any) => {
     return new Promise(async (resolve, reject) => {
       try {
-        let available: any = await getLocations();
-        let locatons: any = await getLocations();
+        let available: any = await getLocationsList();
+        let locatons: any = await getdeviceInformation();
         if (available && available.length) {
           var check = null;
           for (let i = 0; i < available?.length; i++) {
@@ -206,6 +207,7 @@ export default function HomeScreen() {
             angle={45}
             colors={status ? InColor : OutConlor}
             style={styles.button}>
+            <FontAwesome name="hand-pointer-o" size={50} color={'#fff'} />
             <Text style={styles.txt7}>Check {status ? 'Out' : 'In'}</Text>
           </LinearGradient>
         </TouchableOpacity>
