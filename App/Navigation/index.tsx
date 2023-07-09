@@ -37,7 +37,7 @@ function HomeTabs() {
       <Tabs.Screen name="Home" component={HomeScreen} />
       <Tabs.Screen name="Logs" component={LogScreen} />
       <Tabs.Screen name="Profile" component={ProfileScreen} />
-      <Tabs.Screen name="More" component={AdminScreen} />
+      {Auth.admin ? <Tabs.Screen name="More" component={AdminScreen} /> : null}
     </Tabs.Navigator>
   );
 }

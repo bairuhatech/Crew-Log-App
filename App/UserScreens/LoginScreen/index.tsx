@@ -48,7 +48,7 @@ export default function LoginScreen() {
             if (CheckAPI.designation === 'Admin') {
               dispatch(setAdmin(true));
             }
-            navigation.reset({routes: [{name: 'HomeStack'}]});
+            navigation.reset({routes: [{name: 'HomeStack' as never}]});
           } else {
             setFaildMsg('Invalid Employee ID or Password !. Try again');
           }

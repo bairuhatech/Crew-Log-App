@@ -13,8 +13,6 @@ export default function SplashScreen(props: any) {
     checkAuth();
   }, []);
 
-  console.log(Auth);
-
   const checkAuth = () => {
     setTimeout(() => {
       props.navigation.dispatch(
