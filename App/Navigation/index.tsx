@@ -2,7 +2,7 @@ import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {useSelector} from 'react-redux';
-import {TabIcons} from './TabOption';
+import {TabIcons, HeaderStyle} from './TabOption';
 import SettingsIcon from './SettingsIcon';
 import COLOR from '../Config/COLOR';
 import styles from './styles';
@@ -14,6 +14,10 @@ import Reportscreen from '../UserScreens/Reportscreen';
 import ProfileScreen from '../UserScreens/ProfileScreen';
 import SettingScreen from '../UserScreens/SettingScreen';
 import AdminScreen from '../AdminScreen';
+import AllUsers from '../AdminScreen/AllUsers';
+import CreateUser from '../AdminScreen/CreateUser';
+import Location from '../AdminScreen/Location';
+import ViewAllLogs from '../AdminScreen/ViewAllLogs';
 
 const Stack = createNativeStackNavigator();
 const Tabs = createBottomTabNavigator();
@@ -32,6 +36,7 @@ function HomeTabs() {
         tabBarLabelStyle: styles.TabLabel,
         tabBarStyle: styles.TabStyle,
         headerTitleStyle: styles.TabTitle,
+        headerShadowVisible: false,
         headerRight: () => <SettingsIcon />,
       })}>
       <Tabs.Screen name="Home" component={HomeScreen} />
@@ -63,6 +68,32 @@ export default function Navigation() {
         name="HomeStack"
         component={HomeTabs}
         options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="AdminAllUser"
+        component={AllUsers}
+        options={{
+          headerStyle: styles.headerBackround,
+          headerTitleStyle: styles.headerTitletxt,
+          headerShadowVisible: false,
+          headerTitleAlign: 'left',
+          title: 'All Users',
+        }}
+      />
+      <Stack.Screen
+        name="AdminCreateUser"
+        options={HeaderStyle('Create User')}
+        component={CreateUser}
+      />
+      <Stack.Screen
+        name="AdminLocation"
+        options={HeaderStyle('Offices')}
+        component={Location}
+      />
+      <Stack.Screen
+        name="AdminViewLog"
+        options={HeaderStyle('All Logs')}
+        component={ViewAllLogs}
       />
     </Stack.Navigator>
   );

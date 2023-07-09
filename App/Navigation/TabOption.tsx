@@ -15,3 +15,13 @@ export const TabIcons = (route: any, focused: any, color: any, size: any) => {
   }
   return <Ionicons name={iconName} color={color} style={styles.TabIcons} />;
 };
+
+export const HeaderStyle = (title: any) => {
+  return {
+    headerStyle: styles.headerBackround,
+    headerTitleStyle: styles.headerTitletxt,
+    headerShadowVisible: false,
+    headerTitleAlign: 'left',
+    title: title,
+  };
+};

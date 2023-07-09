@@ -12,6 +12,7 @@ import styles from './styles';
 import {useDispatch, useSelector} from 'react-redux';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {logout} from '../../Redux/Slices/AuthSlice';
+import {Clearlog} from '../../Redux/Slices/CheckInOut';
 import {useNavigation} from '@react-navigation/native';
 
 export default function ProfileScreen() {
@@ -31,6 +32,7 @@ export default function ProfileScreen() {
         text: 'OK',
         onPress: () => {
           dispatch(logout(null));
+          dispatch(Clearlog(null));
           navigation.reset({routes: [{name: 'loginscreen' as never}]});
         },
       },

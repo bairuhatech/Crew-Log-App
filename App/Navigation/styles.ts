@@ -24,4 +24,12 @@ export default StyleSheet.create({
     fontSize: 24,
     color: COLOR.grey1,
   },
+  headerBackround: {
+    backgroundColor: COLOR.White,
+    elevation: 0,
+  },
+  headerTitletxt: {
+    fontSize: 18,
+    fontFamily: Fonts.bold,
+  },
 });

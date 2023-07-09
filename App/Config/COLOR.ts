@@ -13,6 +13,6 @@ const COLOR = {
   header: '#FAFAFA',
   StatusBar: '#f1f1f1',
   White: '#FFFFFF',
-  transparent: 'rgba(52, 52, 52, 0.3)',
+  transparent: 'rgba(52, 52, 52, 0.2)',
 };
 export default COLOR;
