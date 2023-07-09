@@ -108,7 +108,7 @@ const ViewUserLogs = () => {
                           </View>
                         );
                       })}
-                      <View style={styles.ReportStatusItem}>
+                      {/* <View style={styles.ReportStatusItem}>
                         <View style={styles.ReportStatusItemCol1}>
                           <Feather
                             name="log-in"
@@ -122,11 +122,10 @@ const ViewUserLogs = () => {
                         <View style={styles.ReportStatusItemCol2}>
                           <Text style={styles.ReportStatusTxt2}>
                             {moment(data[0]?.checkin_time).format('h:mm:ss A')}
-                            {/* {moment(data[0]?.checkin_time).format('MMM Do YYYY')} */}
                           </Text>
                         </View>
-                      </View>
-                      <View style={styles.ReportStatusItem}>
+                      </View> */}
+                      {/* <View style={styles.ReportStatusItem}>
                         <View style={styles.ReportStatusItemCol1}>
                           <Feather
                             name="log-out"
@@ -147,7 +146,7 @@ const ViewUserLogs = () => {
                             </Text>
                           </View>
                         ) : null}
-                      </View>
+                      </View> */}
                     </View>
                   </>
                 );

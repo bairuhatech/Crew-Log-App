@@ -157,18 +157,18 @@ const HomeScreen = () => {
                 </Text>
               </View>
               <TouchableOpacity
-                // onPress={() => {
-                //   CheckedIn
-                //     ? toast.show('Already Checked In !', {
-                //         type: 'danger',
-                //       })
-                //     : setDocheckin(true);
+                onPress={() => {
+                  CheckedIn
+                    ? toast.show('Already Checked In !', {
+                        type: 'danger',
+                      })
+                    : setDocheckin(true);
 
-                //   toast.show('Location error. Please contact Admin !', {
-                //     type: 'danger',
-                //   })
-                // }}
-                onPress={() => setDocheckin(true)}
+                  toast.show('Location error. Please contact Admin !', {
+                    type: 'danger',
+                  });
+                }}
+                // onPress={() => setDocheckin(true)}
                 style={CheckedIn ? styles.inButtonFade : styles.inButton}>
                 <Text style={styles.buttonTxt1}>Check In</Text>
                 <Feather size={20} color={COLOR.grey10} name="log-in" />
@@ -183,15 +183,15 @@ const HomeScreen = () => {
                 </Text>
               </View>
               <TouchableOpacity
-                // disabled={CheckedOut ? true : false}
-                onPress={() => setDocheckout(true)}
-                // onPress={() => {
-                //   CheckedOut
-                //     ? toast.show('Check In First !', {
-                //         type: 'danger',
-                //       })
-                //     : setDocheckout(true);
-                // }}
+                disabled={CheckedOut ? true : false}
+                // onPress={() => setDocheckout(true)}
+                onPress={() => {
+                  CheckedOut
+                    ? toast.show('Check In First !', {
+                        type: 'danger',
+                      })
+                    : setDocheckout(true);
+                }}
                 style={CheckedOut ? styles.inButtonFade : styles.inButton}>
                 <Text style={styles.buttonTxt1}>Check Out</Text>
                 <Feather size={20} color={COLOR.grey10} name="log-out" />
