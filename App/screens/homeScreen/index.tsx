@@ -163,10 +163,9 @@ const HomeScreen = () => {
                         type: 'danger',
                       })
                     : setDocheckin(true);
-
-                  toast.show('Location error. Please contact Admin !', {
-                    type: 'danger',
-                  });
+                  // toast.show('Location error. Please contact Admin !', {
+                  //   type: 'danger',
+                  // });
                 }}
                 // onPress={() => setDocheckin(true)}
                 style={CheckedIn ? styles.inButtonFade : styles.inButton}>

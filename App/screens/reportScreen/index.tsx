@@ -120,7 +120,9 @@ const ReportScreen = () => {
                           <View style={styles.ReportStatusItem}>
                             <View style={styles.ReportStatusItemCol1}>
                               <Feather
-                                name="log-in"
+                                name={
+                                  val.type === 'checkin' ? 'log-in' : 'log-out'
+                                }
                                 size={20}
                                 color={
                                   val.type === 'checkin'

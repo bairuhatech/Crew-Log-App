@@ -51,7 +51,7 @@ const AddLocation = ({props, route}: any) => {
       .then(data => {
         console.log('Success:', data);
         setIsLoading(true);
-        Refresh()
+        Refresh();
         navigation.navigate('location' as never);
         toast.show('Location Added', {
           type: 'success',
@@ -91,6 +91,7 @@ const AddLocation = ({props, route}: any) => {
 
       error => {
         console.log('Error getting current location:', error);
+        setIsLoading2(false);
         toast.show('unable to check your location', {
           type: 'warning',
         });
@@ -128,10 +129,10 @@ const AddLocation = ({props, route}: any) => {
         <View style={{marginTop: 20}}>
           <TouchableOpacity
             onPress={() => checkLocation()}
-            style={styles.BackButton}>
+            style={styles.LocationBtn}>
             {isLoading2 ? (
               <>
-                <Loader color={COLOR.white} />
+                <Loader color={COLOR.primary} />
                 <Text style={styles.BtnTxt2}>Fetching your Location</Text>
               </>
             ) : (
@@ -140,9 +141,9 @@ const AddLocation = ({props, route}: any) => {
                   style={{marginRight: 10}}
                   name="location"
                   size={18}
-                  color={COLOR.grey10}
+                  color={COLOR.primary}
                 />
-                <Text style={styles.BtnTxt}>Use Current Location</Text>
+                <Text style={styles.BtnTxt2}>Use Current Location</Text>
               </>
             )}
           </TouchableOpacity>
@@ -172,13 +173,25 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     flexDirection: 'row',
   },
+
+  LocationBtn: {
+    // backgroundColor: COLOR.primary,
+    borderWidth:1.5,
+    borderColor:COLOR.primary,
+    height: 45,
+    borderRadius: 7,
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'row',
+  },
+
   BtnTxt: {
     color: COLOR.white,
     fontFamily: FONT.semibold,
     fontSize: 14,
   },
   BtnTxt2: {
-    color: COLOR.white,
+    color: COLOR.primary,
     fontFamily: FONT.semibold,
     fontSize: 14,
     marginLeft: 20,

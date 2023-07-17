@@ -1,4 +1,11 @@
-import {RefreshControl, ScrollView, StyleSheet, Text, View} from 'react-native';
+import {
+  RefreshControl,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import API from '../../config/API';
 import {useSelector} from 'react-redux';
@@ -9,12 +16,14 @@ import {useToast} from 'react-native-toast-notifications';
 import COLOR from '../../config/color';
 import FONT from '../../config/font';
 import Feather from 'react-native-vector-icons/Feather';
+import Loader from '../../components/loader';
 
 const ViewUserLogs = () => {
   const toast = useToast();
   const navigation = useNavigation();
   const [groupedRData, setGroupedRData] = useState<any>({});
   const User = useSelector((state: any) => state.User.emp_id);
+  const [isLoading, setIsLoading] = useState(false);
 
   // console.log('Auth--> ', Auth);
   const [reportData, setReportData] = useState([]);
@@ -30,7 +39,7 @@ const ViewUserLogs = () => {
     setLoading(true);
     let api = `${API.BASE_URL}${API.REPORT_BY_USER2}${Number(
       User,
-    )}?order=ASC&page=1&take=200`;
+    )}?order=DESC&page=1&take=200`;
     console.log('------------------------api ---', api);
 
     fetch(api, {
@@ -88,9 +97,15 @@ const ViewUserLogs = () => {
                           <View style={styles.ReportStatusItem}>
                             <View style={styles.ReportStatusItemCol1}>
                               <Feather
-                                name="log-in"
+                                name={
+                                  val.type === 'checkin' ? 'log-in' : 'log-out'
+                                }
                                 size={20}
-                                color={COLOR.success}
+                                color={
+                                  val.type === 'checkin'
+                                    ? COLOR.success
+                                    : COLOR.warning
+                                }
                               />
                               <Text style={styles.ReportStatusTxt1}>
                                 {val && val.type}
@@ -172,6 +187,17 @@ const ViewUserLogs = () => {
           </ScrollView>
         </View>
       )}
+      <View style={{padding: 10}}>
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={styles.BackButton}>
+          {isLoading ? (
+            <Loader color={COLOR.white} />
+          ) : (
+            <Text style={styles.BtnTxt}>Back</Text>
+          )}
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
@@ -231,5 +257,20 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'flex-end',
     marginRight: 10,
+  },
+  BackButton: {
+    // backgroundColor: COLOR.primary,
+    borderWidth: 1.5,
+    borderColor: COLOR.primary,
+    height: 45,
+    borderRadius: 7,
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'row',
+  },
+  BtnTxt: {
+    color: COLOR.primary,
+    fontFamily: FONT.semibold,
+    fontSize: 14,
   },
 });
